@@ -145,8 +145,6 @@ RCT_EXPORT_METHOD(__registerAsJSEventEmitter:(int)moduleId) {
 	}
 }
 
-
-
 #pragma mark - React Native functions
 
 RCT_EXPORT_MODULE()
@@ -969,9 +967,14 @@ RCT_EXPORT_METHOD(sendRequest:(NSString*)endpoint method:(NSString*)method param
 		// if the error is one that requires logging out, log out
 		BOOL sendLogoutEvent = NO;
         BOOL sendCustomEvent = NO;
+
+		// Extra catch to see if Freemium user recieved proper auth back
+		if(_auth.session != nil) {
+            _loggedIn = true;
+        }
+
 		if([[self isLoggedIn] boolValue])
-		{
-            
+		{   
 			if(error.code==SPErrorApplicationBanned || error.code==SPErrorLoginBadCredentials
 			    || error.code==SPErrorGeneralLoginError)
 			{
