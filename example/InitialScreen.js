@@ -9,7 +9,7 @@ import {
 	View
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-import Spotify from 'rn-spotify-sdk';
+import Spotify from 'rn-spotify-sdk-ambii';
 
 export class InitialScreen extends Component
 {

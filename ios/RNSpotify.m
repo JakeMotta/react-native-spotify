@@ -961,28 +961,55 @@ RCT_EXPORT_METHOD(sendRequest:(NSString*)endpoint method:(NSString*)method param
 	}
 }
 
--(void)audioStreaming:(SPTAudioStreamingController*)audioStreaming didReceiveError:(NSError*)error {
-	if(_loggingInPlayer) {
+-(void)audioStreaming:(SPTAudioStreamingController*)audioStreaming didReceiveError:(NSError*)error
+{
+	if(_loggingInPlayer)
+	{
 		_loggingInPlayer = NO;
 		// if the error is one that requires logging out, log out
 		BOOL sendLogoutEvent = NO;
-		if([[self isLoggedIn] boolValue]) {
-			// clear session and stop player
-			[self clearSession];
-			[_player stopWithError:nil];
-			sendLogoutEvent = YES;
+        BOOL sendCustomEvent = NO;
+		if([[self isLoggedIn] boolValue])
+		{
+            
+			if(error.code==SPErrorApplicationBanned || error.code==SPErrorLoginBadCredentials
+			    || error.code==SPErrorGeneralLoginError)
+			{
+				// clear session and stop player
+				_auth.session = nil;
+				
+                [_player stopWithError:nil];
+				sendLogoutEvent = YES;
+			}
+            
+            if(error.code==SPErrorNeedsPremium) {
+                sendCustomEvent = YES;
+            }
 		}
 		
 		// handle loginPlayer callbacks
 		NSArray<RNSpotifyCompletion*>* loginPlayerResponses = [NSArray arrayWithArray:_loginPlayerResponses];
 		[_loginPlayerResponses removeAllObjects];
-		for(RNSpotifyCompletion* response in loginPlayerResponses) {
-			[response reject:[RNSpotifyError errorWithNSError:error]];
+		for(RNSpotifyCompletion* response in loginPlayerResponses)
+		{
+            if(!sendCustomEvent) { // If Spotify rejects us for some reason other than non-premium
+                [response reject:[RNSpotifyError errorWithNSError:error]];
+            } else { // If Spotify rejected us for non-premium
+                [response resolve:nil];
+            }
 		}
-		
-		if(sendLogoutEvent) {
+        
+		// Emit for login fails
+		if(sendLogoutEvent)
+		{
 			[self sendEvent:@"logout" args:@[]];
 		}
+        
+		// Emit for non-premium users
+        if(sendCustomEvent)
+        {
+            [self sendEvent:@"nonpremium" args:@[]];
+        }
 	}
 }
 

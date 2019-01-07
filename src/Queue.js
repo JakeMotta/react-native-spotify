@@ -23,6 +23,9 @@ nativeEvents.on('login', () => {
 	}
 });
 
+nativeEvents.on('nonpremium', () => {
+});
+
 nativeEvents.on('logout', () => {
 	connected = null;
 	Queue.clear();

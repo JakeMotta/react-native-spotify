@@ -141,7 +141,7 @@ android {
 }
 
 dependencies {
-    api project(':rn-spotify-sdk')
+    api project(':rn-spotify-sdk-ambii')
     api project(':react-native-events')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"

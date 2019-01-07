@@ -10,7 +10,7 @@
     "react": "16.6.1",
     "react-native": "0.57.5",
     "react-navigation": "^2.18.2",
-    "rn-spotify-sdk": "git://github.com/lufinkey/react-native-spotify.git#dev"
+    "rn-spotify-sdk-ambii": "git://github.com/lufinkey/react-native-spotify.git#dev"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

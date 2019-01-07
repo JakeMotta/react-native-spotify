@@ -30,7 +30,7 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
         flatDir {
-			dirs project(':rn-spotify-sdk').file('libs'), 'libs'
+			dirs project(':rn-spotify-sdk-ambii').file('libs'), 'libs'
 		}
     }
 }

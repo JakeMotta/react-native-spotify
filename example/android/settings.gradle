@@ -1,6 +1,6 @@
 rootProject.name = 'ExampleSpotifyApp'
-include ':rn-spotify-sdk'
-project(':rn-spotify-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/rn-spotify-sdk/android')
+include ':rn-spotify-sdk-ambii'
+project(':rn-spotify-sdk-ambii').projectDir = new File(rootProject.projectDir, '../node_modules/rn-spotify-sdk-ambii/android')
 include ':react-native-events'
 project(':react-native-events').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-events/android')
 
