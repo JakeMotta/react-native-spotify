@@ -1303,10 +1303,20 @@ public class RNSpotifyModule extends ReactContextBaseJavaModule implements Playe
 		}
 	}
 
+	// I'm doing this blind because I can't figure out Android Studio debugging
 	@Override
 	public void onLoginFailed(Error error) {
 		boolean sendLogoutEvent = false;
+		boolean sendCustomEvent = false;
+
+		// If Freemium user has an access token, set 'loggedIn' to true
+		if(auth.getAccessToken() != null) {
+			loggedIn = true;
+		}
+
 		if(isLoggedIn()) {
+			sendCustomEvent = true; // Freemium user was logged in
+		} else {
 			// clear session and destroy player
 			clearSession();
 			Spotify.destroyPlayer(this);
@@ -1321,12 +1331,21 @@ public class RNSpotifyModule extends ReactContextBaseJavaModule implements Playe
 			playerLoginResponses.clear();
 		}
 		for(Completion<Void> response : loginResponses) {
-			response.reject(new SpotifyError(error));
+			if(!sendCustomEvent) {
+				response.reject(new SpotifyError(error));
+			} else {
+				response.resolve(null);
+			}
 		}
 
 		// send logout event if necessary
 		if(sendLogoutEvent) {
 			sendEvent("logout");
+		}
+
+		// send nonpremium event if necessary
+		if(sendCustomEvent) {
+			sendEvent("nonpremium");
 		}
 	}
 
